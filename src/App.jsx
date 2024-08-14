@@ -13,6 +13,18 @@ const App = () => {
     setTrackList([...trackList, formData]);
   };
 
+  const handleUpdateTrack = async (formData, trackId) => {
+    try {
+      const updatedTrack = await trackService.updateTrack(formData, trackId);
+      const updatedTrackList = trackList.map((track) =>
+        track._id === updatedTrack._id ? updatedTrack : track
+      );
+      setTrackList(updatedTrackList);
+    } catch (error) {
+      console.error("Failed to update track:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchIndex = async () => {
       try {
@@ -32,6 +44,15 @@ const App = () => {
         <Route
           path="/add-track"
           element={<TrackForm handleCreateTrack={handleCreateTrack} />}
+        />
+        <Route
+          path="/edit-track/:trackId"
+          element={
+            <TrackForm
+              trackList={trackList}
+              handleUpdateTrack={handleUpdateTrack}
+            />
+          }
         />
       </Routes>
     </>

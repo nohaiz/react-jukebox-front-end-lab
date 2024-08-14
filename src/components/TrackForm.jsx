@@ -1,26 +1,38 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-const TrackForm = ({ handleCreateTrack }) => {
+const TrackForm = ({ handleCreateTrack, trackList, handleUpdateTrack }) => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  const { trackId } = useParams();
+  const initialState = {
     title: "",
     artist: "",
-  });
+  };
+  const [formData, setFormData] = useState(
+    trackId ? trackList.find((track) => track._id === trackId) : initialState
+  );
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    handleCreateTrack(formData);
-    setFormData({ title: "", artist: "" });
-    navigate("/");
+    if (trackId) {
+      e.preventDefault();
+      handleUpdateTrack(formData, trackId);
+      setFormData(initialState);
+      navigate("/");
+    } else {
+      e.preventDefault();
+      handleCreateTrack(formData);
+      setFormData(initialState);
+      navigate("/");
+    }
   };
 
   return (
     <>
+      <h2>Create a new track</h2>
       <form onSubmit={handleSubmit}>
         <label htmlFor="title">Title</label>
         <input
@@ -41,6 +53,8 @@ const TrackForm = ({ handleCreateTrack }) => {
         />
         <button type="submit">Submit</button>
       </form>
+      <br />
+      <Link to="/">Back</Link>
     </>
   );
 };

@@ -10,6 +10,7 @@ const TrackList = ({ trackList }) => {
           <li key={index}>
             <p>Title: {track.title}</p>
             <p>Artist: {track.artist}</p>
+            <Link to={`/edit-track/${track._id}`}>Edit</Link>
           </li>
         ))}
       </ul>
