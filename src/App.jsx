@@ -1,6 +1,6 @@
 import Home from "./components/Home";
 import { Route, Routes } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useParams } from "react";
 
 import * as trackService from "./services/trackService";
 import TrackForm from "./components/TrackForm";
@@ -9,8 +9,8 @@ const App = () => {
   const [trackList, setTrackList] = useState([]);
 
   const handleCreateTrack = async (formData) => {
-    await trackService.createTrack(formData);
-    setTrackList([...trackList, formData]);
+    const createdTrack = await trackService.createTrack(formData);
+    setTrackList([...trackList, createdTrack]);
   };
 
   const handleUpdateTrack = async (formData, trackId) => {
@@ -22,6 +22,18 @@ const App = () => {
       setTrackList(updatedTrackList);
     } catch (error) {
       console.error("Failed to update track:", error);
+    }
+  };
+
+  const handleDeleteTrack = async (trackId) => {
+    try {
+      await trackService.deleteTrack(trackId);
+      const updatedTrackList = trackList.filter(
+        (track) => track._id !== trackId
+      );
+      setTrackList(updatedTrackList);
+    } catch (err) {
+      console.error("Failed to delete track:", err);
     }
   };
 
@@ -40,7 +52,12 @@ const App = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home trackList={trackList} />} />
+        <Route
+          path="/"
+          element={
+            <Home trackList={trackList} handleDeleteTrack={handleDeleteTrack} />
+          }
+        />
         <Route
           path="/add-track"
           element={<TrackForm handleCreateTrack={handleCreateTrack} />}

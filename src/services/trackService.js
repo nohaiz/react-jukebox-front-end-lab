@@ -50,4 +50,18 @@ const updateTrack = async (formData, trackId) => {
   }
 };
 
-export { index, createTrack, updateTrack };
+const deleteTrack = async (trackId) => {
+  try {
+    const res = await fetch(`${BASE_URL}/${trackId}`, {
+      method: "DELETE",
+    });
+    if (!res.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return res.json();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export { index, createTrack, updateTrack, deleteTrack };
