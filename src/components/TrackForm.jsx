@@ -32,7 +32,7 @@ const TrackForm = ({ handleCreateTrack, trackList, handleUpdateTrack }) => {
 
   return (
     <>
-      <h2>Create a new track</h2>
+      {trackId ? <h2>Edit track</h2> : <h2>Create a new track</h2>}
       <form onSubmit={handleSubmit}>
         <label htmlFor="title">Title</label>
         <input
